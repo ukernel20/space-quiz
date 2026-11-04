@@ -285,6 +285,35 @@
       font-weight: 600;
     }
 
+    .incorrect-list {
+      display: grid;
+      gap: 12px;
+      margin: 20px 0;
+      padding-left: 28px;
+      text-align: left;
+    }
+
+    .incorrect-list li {
+      padding: 12px 14px;
+      border: 1px solid var(--wrong-border);
+      border-radius: 12px;
+      background: var(--wrong-bg);
+    }
+
+    .review-question, .review-answer {
+      margin: 0;
+    }
+
+    .review-question {
+      font-weight: 700;
+    }
+
+    .review-answer {
+      margin-top: 6px;
+      color: var(--correct-border);
+      font-weight: 700;
+    }
+
     .hidden {
       display: none !important;
     }
@@ -330,6 +359,8 @@
       <h2>미션 완료!</h2>
       <div id="emojiReaction" class="emoji">🌍</div>
       <p id="finalScoreText" class="result-line"></p>
+      <p id="reviewMessage" class="result-line"></p>
+      <ol id="incorrectAnswers" class="incorrect-list"></ol>
       <button id="restartBtn" class="restart-btn">다시 도전</button>
     </section>
   </main>
@@ -399,11 +430,14 @@
     const resultSection = document.getElementById("resultSection");
     const emojiReaction = document.getElementById("emojiReaction");
     const finalScoreText = document.getElementById("finalScoreText");
+    const reviewMessage = document.getElementById("reviewMessage");
+    const incorrectAnswers = document.getElementById("incorrectAnswers");
     const restartBtn = document.getElementById("restartBtn");
 
     let currentIndex = 0;
     let score = 0;
     let answered = false;
+    let incorrectQuestionIndexes = [];
 
     function setProgress() {
       const progress = (currentIndex / quizData.length) * 100;
@@ -453,6 +487,7 @@
         feedbackEl.classList.add("correct");
       } else {
         clickedBtn.classList.add("wrong");
+        incorrectQuestionIndexes.push(currentIndex);
         feedbackEl.textContent = "❌ 아쉬워요! 강조된 선택지가 정답이에요.";
         feedbackEl.classList.add("wrong");
       }
@@ -476,6 +511,27 @@
       progressBar.style.width = "100%";
       emojiReaction.textContent = getEmoji(score);
       finalScoreText.textContent = `총 ${quizData.length}문제 중 ${score}문제를 맞혔어요.`;
+      incorrectAnswers.innerHTML = "";
+
+      if (incorrectQuestionIndexes.length === 0) {
+        reviewMessage.textContent = "모든 문제를 맞혔어요! 복습할 오답이 없습니다.";
+        return;
+      }
+
+      reviewMessage.textContent = "틀린 문제와 정답을 확인해 보세요.";
+      incorrectQuestionIndexes.forEach((questionIndex) => {
+        const item = quizData[questionIndex];
+        const listItem = document.createElement("li");
+        const question = document.createElement("p");
+        const answer = document.createElement("p");
+
+        question.className = "review-question";
+        question.textContent = item.question;
+        answer.className = "review-answer";
+        answer.textContent = `정답: ${item.options[item.answer]}`;
+        listItem.append(question, answer);
+        incorrectAnswers.appendChild(listItem);
+      });
     }
 
     nextBtn.addEventListener("click", () => {
@@ -490,6 +546,7 @@
     restartBtn.addEventListener("click", () => {
       currentIndex = 0;
       score = 0;
+      incorrectQuestionIndexes = [];
       resultSection.classList.add("hidden");
       quizSection.classList.remove("hidden");
       showQuestion();
