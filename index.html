@@ -235,6 +235,11 @@
       color: var(--wrong-border);
     }
 
+    .explanation {
+      margin: 8px 0 0;
+      color: var(--muted);
+    }
+
     .next-row {
       margin-top: 16px;
       display: flex;
@@ -321,6 +326,7 @@
       <h2 id="questionText" class="question"></h2>
       <div id="answers" class="answers"></div>
       <div id="feedback" class="feedback"></div>
+      <p id="explanation" class="explanation hidden"></p>
       <div class="next-row">
         <button id="nextBtn" class="next-btn" disabled>다음</button>
       </div>
@@ -339,52 +345,62 @@
       {
         question: "인류가 최초로 달에 착륙한 임무는 무엇일까요?",
         options: ["아폴로 11호", "보스토크 1호", "아르테미스 I", "제미니 4호"],
-        answer: 0
+        answer: 0,
+        explanation: "아폴로 11호는 1969년 인류 최초로 사람을 달 표면에 착륙시킨 임무예요."
       },
       {
         question: "태양계에서 가장 큰 행성은 무엇일까요?",
         options: ["토성", "목성", "해왕성", "지구"],
-        answer: 1
+        answer: 1,
+        explanation: "목성은 지름과 질량 모두 태양계 행성 가운데 가장 커요."
       },
       {
         question: "‘창조의 기둥’ 같은 심우주 이미지를 가시광선으로 촬영한 망원경은 무엇일까요?",
         options: ["제임스 웹 우주망원경", "허블 우주망원경", "스피처 우주망원경", "찬드라 엑스선 관측소"],
-        answer: 1
+        answer: 1,
+        explanation: "허블 우주망원경은 가시광선으로 ‘창조의 기둥’을 촬영했어요. 제임스 웹은 주로 적외선을 관측해요."
       },
       {
         question: "저궤도에서 우주비행사를 대부분의 유해한 태양 복사로부터 보호하는 것은 무엇일까요?",
         options: ["밴앨런대", "지구 자기권", "오존층", "소행성대"],
-        answer: 1
+        answer: 1,
+        explanation: "지구 자기권은 태양에서 오는 전기를 띤 입자의 상당 부분을 막아 지구 주변을 보호해요."
       },
       {
         question: "2021년에 화성에 착륙해 큰 주목을 받은 로버는 무엇일까요?",
         options: ["큐리오시티", "스피릿", "퍼서비어런스", "오퍼튜니티"],
-        answer: 2
+        answer: 2,
+        explanation: "퍼서비어런스는 2021년 2월 화성의 예제로 분화구에 착륙해 생명 흔적을 조사하고 있어요."
       },
       {
         question: "광년은 무엇의 단위일까요?",
         options: ["밝기", "시간", "거리", "질량"],
-        answer: 2
+        answer: 2,
+        explanation: "광년은 빛이 1년 동안 이동하는 거리로, 별 사이처럼 먼 거리를 나타내요."
       },
       {
         question: "올림푸스 몬스(태양계 최대 화산)가 있는 행성은 무엇일까요?",
         options: ["금성", "화성", "수성", "목성"],
-        answer: 1
+        answer: 1,
+        explanation: "올림푸스 몬스는 화성에 있는 태양계에서 가장 큰 화산이에요."
       },
       {
         question: "인류 최초로 궤도에 올라간 인공위성은 무엇일까요?",
         options: ["스푸트니크 1호", "익스플로러 1호", "루나 2호", "보이저 1호"],
-        answer: 0
+        answer: 0,
+        explanation: "스푸트니크 1호는 1957년 소련이 발사한 인류 최초의 인공위성이에요."
       },
       {
         question: "태양의 에너지원은 무엇일까요?",
         options: ["화학 연소", "핵분열", "핵융합", "지열 가열"],
-        answer: 2
+        answer: 2,
+        explanation: "태양 중심부에서는 수소 원자핵이 헬륨으로 합쳐지는 핵융합이 일어나며 에너지가 나와요."
       },
       {
         question: "인류를 달에 다시 보내기 위한 NASA의 프로그램 이름은 무엇일까요?",
         options: ["머큐리", "보이저", "아르테미스", "스카이랩"],
-        answer: 2
+        answer: 2,
+        explanation: "아르테미스는 우주비행사를 달에 다시 보내고 달 탐사를 이어 가려는 NASA의 프로그램이에요."
       }
     ];
 
@@ -394,6 +410,7 @@
     const questionText = document.getElementById("questionText");
     const answersEl = document.getElementById("answers");
     const feedbackEl = document.getElementById("feedback");
+    const explanationEl = document.getElementById("explanation");
     const nextBtn = document.getElementById("nextBtn");
     const quizSection = document.getElementById("quizSection");
     const resultSection = document.getElementById("resultSection");
@@ -416,6 +433,8 @@
       nextBtn.disabled = true;
       feedbackEl.textContent = "";
       feedbackEl.className = "feedback";
+      explanationEl.textContent = "";
+      explanationEl.classList.add("hidden");
       answersEl.innerHTML = "";
 
       const item = quizData[currentIndex];
@@ -457,6 +476,8 @@
         feedbackEl.classList.add("wrong");
       }
 
+      explanationEl.textContent = item.explanation;
+      explanationEl.classList.remove("hidden");
       scoreCounter.textContent = `점수: ${score}/${quizData.length}`;
       nextBtn.disabled = false;
     }
